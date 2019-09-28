@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Star Wars Game</title>
+
+        <!-- Bootstrap css and js links -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+    <!-- Project specific css -->
+    <link rel="stylesheet" href="assets/css/style.css" type="text/css">
+
+</head>
+<body>
+    
+    <div class="container">
+
+        <!-- leave some space on top -->
+        <div class="row"> 
+            <div class="spacer"></div>
+        </div>
+
+        <!-- row 1 -->
+        <div class="row align-items-center text-center">
+
+            <!-- left column that contains images -->
+            <div class="col-sm-12 col-md-6">
+
+                <div class="row">
+                    <div class="col-3 img-container">
+                        <p>aaa</p>
+                        <img src="assets/images/aaa.jpg" class="img-fluid" id="aaa">
+                        <p id="aaa-hp"></p>
+                    </div>
+        
+                    <div class="col-3 img-container">
+                        <p>bbb</p>
+                        <img src="assets/images/bbb.jpg" class="img-fluid" id="bbb">
+                        <p id="bbb-hp"></p>
+                    </div>
+        
+                    <div class="col-3 img-container">
+                        <p>ccc</p>
+                        <img src="assets/images/ccc.jpg" class="img-fluid" id="ccc">
+                        <p id="ccc-hp"></p>
+                    </div>
+        
+                    <div class="col-3 img-container">
+                        <p>ddd</p>
+                        <img src="assets/images/ddd.jpg" class="img-fluid" id="ddd">
+                        <p id="ddd-hp"></p>
+                    </div>
+
+                </div> <!-- end of row that contains 4 images -->
+            </div> 
+
+            <!-- right column that contains text -->
+            <div class="col-sm-12 col-md-6">
+                <h1>Star Wars RPG!</h1>
+            </div> 
+
+        </div> 
+
+        <!-- row 2 -->
+        <div class="row">
+            <h4>Your Character</h4>
+        </div> 
+
+        <!-- row 3, my character area -->
+        <div class="row" id="me">
+        </div> 
+
+        <!-- row 4 -->
+        <div class="row">
+            <h4>Enemies Available To Attach</3>
+        </div> 
+
+        <!-- row 5, enemy character area -->
+        <div class="row" id="enemies">
+        </div> 
+
+        <!-- row 6 -->
+        <div class="row">
+            <h4>Fight Section</h4>
+        </div>
+
+        <!-- row 7 -->
+        <div class="row">
+            <button type="button" class="btn btn-warning">Attack!</button>
+        </div>
+
+        <!-- row 8 -->
+        <div class="row">
+            <h4>Defender</h4>
+        </div>
+
+        <!-- row 9, defender character area -->
+        <div class="row" id="enemies">
+        </div> 
+
+    </div> <!-- end of container -->
+</body>
+</html>
