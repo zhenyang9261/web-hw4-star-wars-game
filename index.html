@@ -6,8 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Star Wars Game</title>
 
-        <!-- Bootstrap css and js links -->
-    <!-- Latest compiled and minified CSS -->
+    <!-- jQuery Library link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Bootstrap css link -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     
     <!-- Project specific css -->
@@ -30,34 +32,34 @@
             <div class="col-sm-12 col-md-6">
 
                 <div class="row">
-                    <div class="col-md-3 img-container">
+                    <div class="col-md-3 img-container" value="aaa-container">
                         <span>aaa</span>
                         <br>
-                        <img src="assets/images/aaa.jpg" class="img-fluid img" id="aaa">
+                        <button class="character" value="aaa"><img src="assets/images/aaa.jpg" class="img-fluid"></button>
                         <br>
                         <span id="aaa-hp"></span>
                     </div>
         
-                    <div class="col-md-3 img-container">
+                    <div class="col-md-3 img-container" value="bbb-container">
                         <span>bbb</span>
                         <br>
-                        <img src="assets/images/bbb.jpg" class="img-fluid img" id="bbb">
+                        <button class="character" value="bbb"><img src="assets/images/bbb.jpg" class="img-fluid"></button>
                         <br>
                         <span id="bbb-hp"></span>
                     </div>
         
-                    <div class="col-md-3 img-container">
-                        <spanccc</span>
+                    <div class="col-md-3 img-container" value="ccc-container">
+                        <span>ccc</span>
                         <br>
-                        <img src="assets/images/ccc.jpg" class="img-fluid img" id="ccc">
+                        <button class="character" value="ccc"><img src="assets/images/ccc.jpg" class="img-fluid"></button>
                         <br>
                         <span id="bbb-hp"></span>
                     </div>
         
-                    <div class="col-md-3 img-container">
+                    <div class="col-md-3 img-container" value="ddd-container">
                         <span>ddd</span>
                         <br>
-                        <img src="assets/images/ddd.jpg" class="img-fluid img" id="ddd">
+                        <button class="character" value="ddd"><img src="assets/images/ddd.jpg" class="img-fluid"></button>
                         <br>
                         <span id="ddd-hp"></span>
                     </div>
@@ -67,7 +69,7 @@
 
             <!-- right column that contains text -->
             <div class="col-sm-12 col-md-6">
-                <h1 style="color: #33cc33">Star Wars RPG!</h1>
+                <h1 style="color: #002200;">Star Wars RPG!</h1>
             </div> 
 
         </div> 
@@ -78,7 +80,7 @@
         </div> 
 
         <!-- row 3, my character area -->
-        <div class="row" id="me"></div> 
+        <div class="row text-center" id="me"></div> 
 
         <!-- row 4 -->
         <div class="row">
@@ -86,7 +88,7 @@
         </div> 
 
         <!-- row 5, enemy character area -->
-        <div class="row" id="enemies"></div> 
+        <div class="row text-center" id="enemies"></div> 
 
         <!-- row 6 -->
         <div class="row">
@@ -113,5 +115,8 @@
         <div class="row reset"></div>
 
     </div> <!-- end of container -->
+
+    <!-- Project javascript -->
+    <script src="assets/javascript/game.js"></script>
 </body>
 </html>

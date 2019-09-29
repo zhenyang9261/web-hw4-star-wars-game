@@ -11,8 +11,9 @@ body {
     border: 1px solid #33cc33;
 }
 
-.img {
+.character {
     margin: 5px 0;
+    border: 0;
 }
 
 
