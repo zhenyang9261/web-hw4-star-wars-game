@@ -1,0 +1,18 @@
+body {
+    background-image: url("../images/background.png");
+    background-size: cover;
+}
+
+.spacer {
+    height: 2rem;
+}
+
+.img-container {
+    border: 1px solid #33cc33;
+}
+
+.img {
+    margin: 5px 0;
+}
+
+
