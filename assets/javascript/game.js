@@ -63,11 +63,29 @@ var starWars = {
      */
     init: function() {
 
-        // Display character's HP
         var keys = Object.keys(this.characters);
         keys.forEach(function myFunc(item) {
-            $("#"+item+"-hp").text(starWars.characters[item]["HP"]);
+          starWars.populateImg("#player", item);
         });
+
+    },
+
+    /*
+     * Function: Utility function. To compose the image containers with certain values and styles and put in certain section
+     * Input param: element id/class, style string
+     */
+    populateImg: function(section, value, style) {
+console.log("populate images " + section + "value " + value);
+
+        $(section).append(
+            '<div class="img-container" value="' + value + '-container" style="' + style + ';"> \
+             <span>' + value + '</span> \
+             <br> \
+             <button class="character" value=' + value + '><img src="assets/images/' + value + '.jpg" class="img-fluid"></button> \
+             <br> \
+             <span id="' + value + '-hp">' + starWars.characters[value]["HP"] + '</span> \
+             </div>'
+        );
     },
 
     /*
@@ -90,7 +108,7 @@ console.log(characterValue + " " + this.status);
                 this.currentPlayerCAP = this.characters[characterValue]["CAP"];
 
                 // Remove characters section
-                $("#player").remove();
+                $("#player").empty();
 
                 // Move characters to their places
                 var keys = Object.keys(this.characters);
@@ -98,27 +116,11 @@ console.log(characterValue + " " + this.status);
 
                     // Put player in Me section
                     if (item === characterValue) {
-                        $("#me").html(
-                            '<div class="img-container" value="' + item + '-container"> \
-                             <span>' + item + '</span> \
-                             <br> \
-                             <button class="character" value=' + item + '><img src="assets/images/' + item + '.jpg" class="img-fluid"></button> \
-                             <br> \
-                             <span id="' + item + '-hp">' + starWars.characters[item]["HP"] + '</span> \
-                             </div>'
-                        );
+                        starWars.populateImg("#me", item);
                     }
                     // Put the other characters to the Enemy section and change the div background to red
                     else {
-                        $("#enemies").append(
-                            '<div class="img-container" value="' + item + '-container" style="background-color:red"> \
-                             <span>' + item + '</span> \
-                             <br> \
-                             <button class="character" value=' + item + '><img src="assets/images/' + item + '.jpg" class="img-fluid"></button> \
-                             <br> \
-                             <span id="' + item + '-hp">' + starWars.characters[item]["HP"] + '</span> \
-                             </div>'
-                        ).bind('click', this.characterChosen);
+                        starWars.populateImg("#enemies", item, "background-color:red");
                     }
                 });
                                     
@@ -145,17 +147,9 @@ console.log(characterValue + " " + this.status);
                 $('.img-container[value=' + characterValue + '-container]').remove();
 
                 // Put in the Defender section and change the div background to red
-                $("#defender").append(
-                    '<div class="img-container" value="' + characterValue + '-container" style="background-color:black; color: white"> \
-                     <span>' + characterValue + '</span> \
-                     <br> \
-                     <button class="character" value=' + characterValue + '><img src="assets/images/' + characterValue + '.jpg" class="img-fluid"></button> \
-                     <br> \
-                     <span id="' + characterValue + '-hp">' + starWars.characters[characterValue]["HP"] + '</span> \
-                     </div>'
-                );
-                                   
-               break;
+                starWars.populateImg("#defender", characterValue, "background-color:black; color: white");                   
+                
+                break;
 
             default: // Ignore the click for all other statuses
                 break;
@@ -194,6 +188,9 @@ console.log("attack" + " status: " + this.status + " player: " + this.currentPla
                 // Show Reset button
                 $("#reset").attr("style", "display:block");
 
+                // Hide Attack button
+                $("#attack").attr("style", "display:none");
+
             }
                 // Update html to display You Lost
 
@@ -222,6 +219,24 @@ console.log("attack" + " status: " + this.status + " player: " + this.currentPla
      */
     reset: function() {
 
+        this.init();
+
+        // Remove content in me, enemies, defender, win-lose section
+        $("#me, #enemies, #defender, #win-lose").empty();
+
+        // Hide buttons
+        $("#attack, #reset").attr("style", "display: none");
+
+        // Reset all object attributes to initial values
+        this.currentPlayer = "";
+        this.currentDefender = "";
+        this.currentPlayerHP = 0;
+        this.currentPlayerAP = 0;
+        this.currentPlayerCAP = 0;
+        this.currentDefenderHP = 0;
+        this.currentDefenderAP = 0;
+        this.currentDefenderCAP = 0;
+        this.status = 0;
     }
 
 
@@ -240,6 +255,10 @@ $(document).ready(function() {
     
     $("#attack").on("click", function() {
         starWars.attack();
+    });
+
+    $("#reset").on("click", function() {
+        starWars.reset();
     });
 })
 
