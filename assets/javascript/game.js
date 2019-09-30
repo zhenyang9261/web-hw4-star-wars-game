@@ -13,22 +13,22 @@ var starWars = {
             "aaa": {
                 HP: 150,
                 AP: 6,
-                CAP: 12
+                CAP: 24
             },
             "bbb": {
                 HP: 180,
                 AP: 12,
-                CAP: 18
+                CAP: 78
             },
             "ccc": {
                 HP: 110,
                 AP: 18,
-                CAP: 6
+                CAP: 20
             },
             "ddd": {
                 HP: 130,
                 AP: 12,
-                CAP: 18
+                CAP: 36
             },
         },
 
@@ -63,6 +63,11 @@ var starWars = {
      */
     init: function() {
 
+        // Display character's HP
+        var keys = Object.keys(this.characters);
+        keys.forEach(function myFunc(item) {
+            $("#"+item+"-hp").text(starWars.characters[item]["HP"]);
+        });
     },
 
     /*
@@ -80,15 +85,18 @@ console.log(characterValue + " " + this.status);
 
                 // Assign this character current player
                 this.currentPlayer = characterValue;
+                this.currentPlayerHP = this.characters[characterValue]["HP"];
+                this.currentPlayerAP = this.characters[characterValue]["AP"];
+                this.currentPlayerCAP = this.characters[characterValue]["CAP"];
+
+                // Remove characters section
+                $("#player").remove();
 
                 // Move characters to their places
                 var keys = Object.keys(this.characters);
                 keys.forEach(function myFunc(item) {
 
-                    // Remove all characters from current place
-                    $('.img-container[value=' + item + '-container]').remove();
-
-                    // Put player in Your Character section
+                    // Put player in Me section
                     if (item === characterValue) {
                         $("#me").html(
                             '<div class="img-container" value="' + item + '-container"> \
@@ -121,11 +129,17 @@ console.log(characterValue + " " + this.status);
                 // If current player button is clicked, do nothing
                 if (characterValue === this.currentPlayer)
                     return;
-                    
+
                 this.status = 2;
                
+                // Show Attack button
+                $("#attack").attr("style", "display:block");
+
                 // Assign this character current Defender
                 this.currentDefender = characterValue;
+                this.currentDefenderHP = this.characters[characterValue]["HP"];
+                this.currentDefenderAP = this.characters[characterValue]["AP"];
+                this.currentDefenderCAP = this.characters[characterValue]["CAP"];
 
                 // Remove this character from Enemies section
                 $('.img-container[value=' + characterValue + '-container]').remove();
@@ -143,17 +157,9 @@ console.log(characterValue + " " + this.status);
                                    
                break;
 
+            default: // Ignore the click for all other statuses
+                break;
         }
-
-
-        // Else if player was chosen and Defender was not chosen
-        // assign this character to current Defender. Move this character
-        // to the Defender section. Mark the status Ready to Attack
-
-
-        // Else, do nothing
-        
-
     },
 
     
@@ -161,19 +167,34 @@ console.log(characterValue + " " + this.status);
      * Function: To execute when the Attack button is clicked
      */
     attack: function() {
+console.log("attack" + " status: " + this.status + " player: " + this.currentPlayer + " defender: " + this.currentDefender);
 
         // If current player chosen and current Defender chosen
+        if (this.status === 2) {
+            
+            // Reduce Defender HP by Player's AP and update html display
+            this.currentDefenderHP -= this.currentPlayerAP;
+            $("#"+this.currentDefender+"-hp").text(this.currentDefenderHP);
 
-            // Reduce Defender HP by AP and update html display
-
-            // Reduce player HP by CAP and update html display
+            // Reduce current Player HP by current Defender's CAP and update html display
+            this.currentPlayerHP -= this.currentDefenderCAP;
+            $("#"+this.currentPlayer+"-hp").text(this.currentPlayerHP);
 
             // Increase player AP 
+            this.currentPlayerAP += this.characters[this.currentPlayer]["AP"]; 
 
-        
             // If current player HP > 0 and Defender HP > 0 - still in play
             
-            // Else if current play HP <= 0 - player loses
+            // If current play HP <= 0 and current defender HP > 0 - player loses
+            if (this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) {
+                
+                // Update html to display You Lost
+                $("#win-lose").text("You Lost!")
+
+                // Show Reset button
+                $("#reset").attr("style", "display:block");
+
+            }
                 // Update html to display You Lost
 
                 // Reset variables 
@@ -191,9 +212,8 @@ console.log(characterValue + " " + this.status);
                     // Reset current Defender related variables
             // Else 
                 // Chracter with greater negative number wins
-
+        }
         // Else, do nothing
-
 
     },
 
@@ -210,11 +230,16 @@ console.log(characterValue + " " + this.status);
 // Button listeners
 $(document).ready(function() {
 
+    starWars.init();
+
     $("#player, #enemies").on("click", ".img-container .character", function() {
 
         var key = $(this).val();
         starWars.characterChosen(key);    
     });
     
+    $("#attack").on("click", function() {
+        starWars.attack();
+    });
 })
 

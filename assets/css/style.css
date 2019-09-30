@@ -9,11 +9,20 @@ body {
 
 .img-container {
     border: 1px solid #33cc33;
+    font-size: 0.8rem;
 }
 
 .character {
-    margin: 5px 0;
     border: 0;
+}
+
+#win-lose {
+    font-weight: bold;
+    color: red;
+}
+
+#reset {
+    margin-top: 5px;
 }
 
 
