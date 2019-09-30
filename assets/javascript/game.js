@@ -34,26 +34,26 @@ var starWars = {
 
     // A status code that keeps track of the status of the game
     // 0 - game not started, player not chosen
-    // 1 - player chosen, opponent not chosen
-    // 2 - both player and opponent chosen
+    // 1 - player chosen, Defender not chosen
+    // 2 - both player and Defender chosen
     // 3 - game over
     status: 0,
 
-    // Current player and opponent
+    // Current player and Defender
     currentPlayer: "",
-    currentOpponent: "",
+    currentDefender: "",
 
-    // Current player and opponent HP
+    // Current player and Defender HP
     currentPlayerHP: 0,
-    currentOpponentHP: 0,
+    currentDefenderHP: 0,
 
-    // Current player and opponent AP
+    // Current player and Defender AP
     currentPlayerAP: 0,
-    currentOpponentAP: 0,
+    currentDefenderAP: 0,
 
-    // Current player and opponent CAP
+    // Current player and Defender CAP
     currentPlayerCAP: 0,
-    currentOpponentCAP: 0,
+    currentDefenderCAP: 0,
 
     // Object Methods -----------------------------------------------
     
@@ -71,9 +71,6 @@ var starWars = {
     characterChosen: function(characterValue) {
 console.log(characterValue + " " + this.status);
 
-        // If no player was chosen, 
-        // Move the other characters to the Enemy section and change the 
-        // div background to red
         switch (this.status) {
 
             case 0: // player not chosed
@@ -99,7 +96,7 @@ console.log(characterValue + " " + this.status);
                              <br> \
                              <button class="character" value=' + item + '><img src="assets/images/' + item + '.jpg" class="img-fluid"></button> \
                              <br> \
-                             <span id="' + item + '-hp"></span> \
+                             <span id="' + item + '-hp">' + starWars.characters[item]["HP"] + '</span> \
                              </div>'
                         );
                     }
@@ -111,19 +108,47 @@ console.log(characterValue + " " + this.status);
                              <br> \
                              <button class="character" value=' + item + '><img src="assets/images/' + item + '.jpg" class="img-fluid"></button> \
                              <br> \
-                             <span id="' + item + '-hp"></span> \
+                             <span id="' + item + '-hp">' + starWars.characters[item]["HP"] + '</span> \
                              </div>'
-                        );
+                        ).bind('click', this.characterChosen);
                     }
                 });
                                     
                 break;
+            
+            case 1: // Player chosen, Defender not chosen
+             
+                // If current player button is clicked, do nothing
+                if (characterValue === this.currentPlayer)
+                    return;
+                    
+                this.status = 2;
+               
+                // Assign this character current Defender
+                this.currentDefender = characterValue;
+
+                // Remove this character from Enemies section
+                $('.img-container[value=' + characterValue + '-container]').remove();
+
+                // Put in the Defender section and change the div background to red
+                $("#defender").append(
+                    '<div class="img-container" value="' + characterValue + '-container" style="background-color:black; color: white"> \
+                     <span>' + characterValue + '</span> \
+                     <br> \
+                     <button class="character" value=' + characterValue + '><img src="assets/images/' + characterValue + '.jpg" class="img-fluid"></button> \
+                     <br> \
+                     <span id="' + characterValue + '-hp">' + starWars.characters[characterValue]["HP"] + '</span> \
+                     </div>'
+                );
+                                   
+               break;
+
         }
 
 
-        // Else if player was chosen and opponent was not chosen
-        // assign this character to current opponent. Move this character
-        // to the Opponent section. Mark the status Ready to Attack
+        // Else if player was chosen and Defender was not chosen
+        // assign this character to current Defender. Move this character
+        // to the Defender section. Mark the status Ready to Attack
 
 
         // Else, do nothing
@@ -137,33 +162,33 @@ console.log(characterValue + " " + this.status);
      */
     attack: function() {
 
-        // If current player chosen and current opponent chosen
+        // If current player chosen and current Defender chosen
 
-            // Reduce opponent HP by AP and update html display
+            // Reduce Defender HP by AP and update html display
 
             // Reduce player HP by CAP and update html display
 
             // Increase player AP 
 
         
-            // If current player HP > 0 and opponent HP > 0 - still in play
+            // If current player HP > 0 and Defender HP > 0 - still in play
             
             // Else if current play HP <= 0 - player loses
                 // Update html to display You Lost
 
                 // Reset variables 
 
-            // Else if current opponent HP <= 0
+            // Else if current Defender HP <= 0
 
-                // If no opponent left - player wins
+                // If no Defender left - player wins
                     // Update html to display You Won!
 
                     // Reset variables
                 
                 // Else
-                    // Remove this opponent from the opponent section
+                    // Remove this Defender from the Defender section
 
-                    // Reset current opponent related variables
+                    // Reset current Defender related variables
             // Else 
                 // Chracter with greater negative number wins
 
@@ -185,7 +210,7 @@ console.log(characterValue + " " + this.status);
 // Button listeners
 $(document).ready(function() {
 
-    $(".character").on("click", function() {
+    $("#player, #enemies").on("click", ".img-container .character", function() {
 
         var key = $(this).val();
         starWars.characterChosen(key);    
