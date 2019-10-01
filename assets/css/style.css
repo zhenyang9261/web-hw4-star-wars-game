@@ -3,6 +3,14 @@ body {
     background-size: cover;
 }
 
+.title {
+    font-weight: bold;
+    color: white;
+    background-color: blueviolet;
+    display: inline-block;
+    padding: 0.8rem 1.5rem; 
+}
+
 .spacer {
     height: 2rem;
 }
@@ -18,7 +26,11 @@ body {
 
 #win-lose {
     font-weight: bold;
-    color: red;
+    color: white;
+    background-color: blueviolet;
+    display: inline-block;
+    padding: 3px;
+    margin-top: 3px;
 }
 
 #reset {
