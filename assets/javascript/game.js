@@ -84,16 +84,27 @@ var starWars = {
     },
 
     /*
-     * Function: To show/hide certain HTML elements when a character wins or loses
-     * Input param: boolean, whether player won 
+     * Function: To show/hide certain HTML elements when a character wins or loses or tie
+     * Input param: game result: 0 - player won | 1 - player lost | 2 - tie 
      */
-    fightEnd: function(won) {
+    fightEnd: function(result) {
 
-        // If player wins, hard reset
-        hardReset = won? true : false;
-
-        // Update html to display You Lost
-        $("#win-lose").text(won? "You Won! GAME OVER!" : "You Were Defeated! GAME OVER!");
+        switch (result) {
+            case 0:  // player won
+                hardReset = true;
+                $("#win-lose").text("You Won! GAME OVER!");
+                break;
+            case 1:  // player lost
+                hardReset = false;
+                $("#win-lose").text("You Were Defeated! GAME OVER!");
+                break;
+            case 2:  // tie
+                hardReset = false;
+                $("#win-lose").text("Both You and the Defender Do Not Have Health Point To Continue. Please Reset.");
+                break;
+            default:  // shouldn't happen
+                break;
+        } 
 
         // Show Reset button
         $("#reset").attr("style", "display:block");
@@ -197,7 +208,7 @@ var starWars = {
             if (this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) {
                 
                 // Player lost
-                this.fightEnd(false);
+                this.fightEnd(1);
 
             }
             // If defender's HP is negative and player's HP is positive
@@ -209,7 +220,7 @@ var starWars = {
                 if (this.enemiesLeft === 0) {
                     
                     // Player won
-                    this.fightEnd(true);
+                    this.fightEnd(0);
                 }
                 // If there is still defender left
                 else {
@@ -225,17 +236,11 @@ var starWars = {
                 }
             }
             // In the case both player's and defender's HPs fall negative at the same time, 
-            // the character with greater negative number wins. With both HPs negative, game is over regardless
+            // they tie
             else if (this.currentDefenderHP <= 0 && this.currentPlayerHP <= 0) {
 
-                // Player wins
-                if (this.currentPlayerHP >= this.currentDefenderHP) {
-                    this.fightEnd(true);
-                }
-                // Player loses
-                else {
-                    this.fightEnd(false);
-                }
+                // Tie, end the game
+                this.fightEnd(2);
             }
             // Else (both player and defender HP are positive numbers), do nothing
             else 
@@ -259,7 +264,7 @@ var starWars = {
 
                 starWars.characters[item]["HP"] = getRandomNum(150, 250);
                 starWars.characters[item]["AP"] = getRandomNum(5, 15);
-                starWars.characters[item]["CAP"] = getRandomNum(15, 25);
+                starWars.characters[item]["CAP"] = getRandomNum(20, 30);
             }
 
             // Place character images
