@@ -1,6 +1,10 @@
 /* Global variables and functions */
-var playerWon = false;
+// Whether we need a hard reset to reset all characters HP, AP and CAP
+var hardReset = true;
 
+/*
+ * Function: To generate a random number between min and max
+ */
 function getRandomNum (min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -10,40 +14,35 @@ var starWars = {
 
     // Object Attributes --------------------------------------------
 
-    // Characters
-    numberOfCharacters: 4,
-    names: ["aaa", "bbb", "ccc", "ddd"],
-
-    // Object to hold characters and their initial HP, AP, CAP
+    // Object to hold characters and their HP, AP, CAP
     characters: 
         {
             "aaa": {
-                HP: 150,
-                AP: 18,
-                CAP: 12
+                HP: 0,
+                AP: 0,
+                CAP: 0
             },
             "bbb": {
-                HP: 180,
-                AP: 12,
-                CAP: 26
+                HP: 0,
+                AP: 0,
+                CAP: 0
             },
             "ccc": {
-                HP: 110,
-                AP: 18,
-                CAP: 20
+                HP: 0,
+                AP: 0,
+                CAP: 0
             },
             "ddd": {
-                HP: 130,
-                AP: 12,
-                CAP: 36
-            },
+                HP: 0,
+                AP: 0,
+                CAP: 0
+            }
         }, 
 
     // A status code that keeps track of the status of the game
     // 0 - game not started, player not chosen
     // 1 - player chosen, Defender not chosen
     // 2 - both player and Defender chosen
-    // 3 - game over
     status: 0,
 
     // Current player and Defender
@@ -68,28 +67,6 @@ var starWars = {
     // Object Methods -----------------------------------------------
     
     /*
-     * Funciton: To initialize variables and statuses
-     * Input param: boolean. If player won, regenerate characters HP, AP, CAP
-     */
-    init: function(won) {
-
-        var keys = Object.keys(this.characters);
-        keys.forEach(function myFunc(item) {
-          starWars.populateImg("#player", item);
-        });
-
-        if (won) {
-            playerWon = false;
-
-            for (var i=0; i<this.numberOfCharacters; i++) {
-                this.characters[this.names[i]]["HP"] = getRandomNum(100, 200);
-                this.characters[this.names[i]]["AP"] = getRandomNum(5, 25);
-                this.characters[this.names[i]]["CAP"] = getRandomNum(5, 25);
-            }
-        }
-    },
-
-    /*
      * Function: To compose the image containers with certain values and styles and place it in certain section
      * Input param: element id/class to place the image, value of the image, style string
      */
@@ -111,10 +88,9 @@ var starWars = {
      * Input param: boolean, whether player won 
      */
     fightEnd: function(won) {
-console.log("Player won: " + won);
 
-        // Record playerWon status
-        playerWon = won? true : false;
+        // If player wins, hard reset
+        hardReset = won? true : false;
 
         // Update html to display You Lost
         $("#win-lose").text(won? "You Won! GAME OVER!" : "You Were Defeated! GAME OVER!");
@@ -130,7 +106,6 @@ console.log("Player won: " + won);
      * Function: To execute when a character is chosen
      */
     characterChosen: function(characterValue) {
-console.log(characterValue + " " + this.status);
 
         switch (this.status) {
 
@@ -199,7 +174,6 @@ console.log(characterValue + " " + this.status);
      * Function: To execute when the Attack button is clicked
      */
     attack: function() {
-console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + this.currentDefenderHP);
 
         // If current player chosen and current Defender chosen
         if (this.status === 2) {
@@ -264,18 +238,33 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
                 }
             }
             // Else (both player and defender HP are positive numbers), do nothing
-            
+            else 
+                return;
         }
         // Else (status not 2, either player or defender not chosed yet), do nothing
-
+        else
+            return;
     },
 
     /*
      * Function: To execute when the Reset button is clicked
      */
-    reset: function() {
+    reset: function(resetCharacter) {
 
-        this.init(playerWon);
+        var keys = Object.keys(this.characters);
+        keys.forEach(function myFunc(item) {
+          
+            // Reset characters' HP, AP, CAP is needed
+            if (resetCharacter) {
+
+                starWars.characters[item]["HP"] = getRandomNum(150, 250);
+                starWars.characters[item]["AP"] = getRandomNum(5, 15);
+                starWars.characters[item]["CAP"] = getRandomNum(15, 25);
+            }
+
+            // Place character images
+            starWars.populateImg("#player", item);
+        });
 
         // Remove content in me, enemies, defender, win-lose section
         $("#me, #enemies, #defender, #win-lose").empty();
@@ -301,7 +290,7 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
 // Button listeners
 $(document).ready(function() {
 
-    starWars.init(playerWon);
+    starWars.reset(hardReset);
 
     $("#player, #enemies").on("click", ".img-container .character", function() {
         starWars.characterChosen($(this).val());    
@@ -312,7 +301,7 @@ $(document).ready(function() {
     });
 
     $("#reset").on("click", function() {
-        starWars.reset();
+        starWars.reset(hardReset);
     });
 })
 
