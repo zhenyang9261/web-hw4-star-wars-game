@@ -12,13 +12,13 @@ var starWars = {
         {
             "aaa": {
                 HP: 150,
-                AP: 6,
-                CAP: 24
+                AP: 18,
+                CAP: 12
             },
             "bbb": {
                 HP: 180,
                 AP: 12,
-                CAP: 78
+                CAP: 56
             },
             "ccc": {
                 HP: 110,
@@ -55,6 +55,9 @@ var starWars = {
     currentPlayerCAP: 0,
     currentDefenderCAP: 0,
 
+    // Number of enemies left
+    enemiesLeft: 0,
+
     // Object Methods -----------------------------------------------
     
     /*
@@ -68,6 +71,7 @@ var starWars = {
           starWars.populateImg("#player", item);
         });
 
+        enemiesLeft = 3;
     },
 
     /*
@@ -86,6 +90,20 @@ console.log("populate images " + section + "value " + value);
              <span id="' + value + '-hp">' + starWars.characters[value]["HP"] + '</span> \
              </div>'
         );
+    },
+
+    /*
+     * Function: Utility function. To show/hide certain HTML elements when a character wins or loses
+     * Input param: boolean, whether player won 
+     */
+    fightEnd: function(won) {
+
+        // Update html to display You Lost
+        $("#win-lose").text(won? "You Won!" : "You Lost!")
+        // Show Reset button
+        $("#reset").attr("style", "display:block");
+        // Hide Attack button
+        $("#attack").attr("style", "display:none");
     },
 
     /*
@@ -144,7 +162,7 @@ console.log(characterValue + " " + this.status);
                 this.currentDefenderCAP = this.characters[characterValue]["CAP"];
 
                 // Remove this character from Enemies section
-                $('.img-container[value=' + characterValue + '-container]').remove();
+                $('.img-container[value=' + characterValue + '-container]').empty();
 
                 // Put in the Defender section and change the div background to red
                 starWars.populateImg("#defender", characterValue, "background-color:black; color: white");                   
@@ -180,37 +198,38 @@ console.log("attack" + " status: " + this.status + " player: " + this.currentPla
             // If current player HP > 0 and Defender HP > 0 - still in play
             
             // If current play HP <= 0 and current defender HP > 0 - player loses
-            if (this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) {
+            if ((this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) || 
+                ((this.currentPlayerHP <= 0 && this.currentDefenderHP <=0) && this.currentPlayerHP < this.currentDefenderHP)) {
                 
-                // Update html to display You Lost
-                $("#win-lose").text("You Lost!")
-
-                // Show Reset button
-                $("#reset").attr("style", "display:block");
-
-                // Hide Attack button
-                $("#attack").attr("style", "display:none");
+                // Player lost
+                this.fightEnd(false);
 
             }
-                // Update html to display You Lost
+            // If current defender HP <= 0 and current player HP > 0 
+            else if ((this.currentDefenderHP <= 0 && this.currentPlayerHP > 0) ||
+                    ((this.currentPlayerHP <= 0 && this.currentDefenderHP <=0) && this.currentPlayerHP >= this.currentDefenderHP)) {
 
-                // Reset variables 
-
-            // Else if current Defender HP <= 0
-
-                // If no Defender left - player wins
-                    // Update html to display You Won!
-
-                    // Reset variables
+                enemiesLeft--;
                 
-                // Else
-                    // Remove this Defender from the Defender section
+                // If no Defender left - player wins
+                if (this.enemiesLeft === 0) {
+                    
+                    // Player won
+                    this.fightEnd(true);
+                }
+                // If there is still defender left
+                else {
+                    // Player needs to select another defender
+                    this.status = 1;
 
-                    // Reset current Defender related variables
-            // Else 
-                // Chracter with greater negative number wins
+                    // Remove this Defender from the Defender section
+                    $('.img-container[value=' + this.currentDefender + '-container]').empty();    
+                }
+            }
+            // Else (both player and defender HP are positive numbers), do nothing
+            
         }
-        // Else, do nothing
+        // Else (status not 2, either player or defender not chosed yet), do nothing
 
     },
 
@@ -237,8 +256,8 @@ console.log("attack" + " status: " + this.status + " player: " + this.currentPla
         this.currentDefenderAP = 0;
         this.currentDefenderCAP = 0;
         this.status = 0;
+        this.enemiesLeft = 3;
     }
-
 
 }
 
