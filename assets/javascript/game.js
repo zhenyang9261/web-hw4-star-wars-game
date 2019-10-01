@@ -1,13 +1,20 @@
 /* Global variables and functions */
+var playerWon = false;
 
-
+function getRandomNum (min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
 /* game object */
 var starWars = {
 
     // Object Attributes --------------------------------------------
-    
-    // Character names
+
+    // Characters
+    numberOfCharacters: 4,
+    names: ["aaa", "bbb", "ccc", "ddd"],
+
+    // Object to hold characters and their initial HP, AP, CAP
     characters: 
         {
             "aaa": {
@@ -18,7 +25,7 @@ var starWars = {
             "bbb": {
                 HP: 180,
                 AP: 12,
-                CAP: 56
+                CAP: 26
             },
             "ccc": {
                 HP: 110,
@@ -30,7 +37,7 @@ var starWars = {
                 AP: 12,
                 CAP: 36
             },
-        },
+        }, 
 
     // A status code that keeps track of the status of the game
     // 0 - game not started, player not chosen
@@ -56,27 +63,35 @@ var starWars = {
     currentDefenderCAP: 0,
 
     // Number of enemies left
-    enemiesLeft: 0,
+    enemiesLeft: 3,
 
     // Object Methods -----------------------------------------------
     
     /*
      * Funciton: To initialize variables and statuses
-     * 
+     * Input param: boolean. If player won, regenerate characters HP, AP, CAP
      */
-    init: function() {
+    init: function(won) {
 
         var keys = Object.keys(this.characters);
         keys.forEach(function myFunc(item) {
           starWars.populateImg("#player", item);
         });
 
-        enemiesLeft = 3;
+        if (won) {
+            playerWon = false;
+
+            for (var i=0; i<this.numberOfCharacters; i++) {
+                this.characters[this.names[i]]["HP"] = getRandomNum(100, 200);
+                this.characters[this.names[i]]["AP"] = getRandomNum(5, 25);
+                this.characters[this.names[i]]["CAP"] = getRandomNum(5, 25);
+            }
+        }
     },
 
     /*
-     * Function: Utility function. To compose the image containers with certain values and styles and put in certain section
-     * Input param: element id/class, style string
+     * Function: To compose the image containers with certain values and styles and place it in certain section
+     * Input param: element id/class to place the image, value of the image, style string
      */
     populateImg: function(section, value, style) {
 
@@ -92,16 +107,21 @@ var starWars = {
     },
 
     /*
-     * Function: Utility function. To show/hide certain HTML elements when a character wins or loses
+     * Function: To show/hide certain HTML elements when a character wins or loses
      * Input param: boolean, whether player won 
      */
     fightEnd: function(won) {
 console.log("Player won: " + won);
 
+        // Record playerWon status
+        playerWon = won? true : false;
+
         // Update html to display You Lost
-        $("#win-lose").text(won? "You Won! GAME OVER!" : "You Were Defeated! GAME OVER!")
+        $("#win-lose").text(won? "You Won! GAME OVER!" : "You Were Defeated! GAME OVER!");
+
         // Show Reset button
         $("#reset").attr("style", "display:block");
+
         // Hide Attack button
         $("#attack").attr("style", "display:none");
     },
@@ -174,8 +194,7 @@ console.log(characterValue + " " + this.status);
                 break;
         }
     },
-
-    
+  
     /*
      * Function: To execute when the Attack button is clicked
      */
@@ -197,22 +216,18 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
             $("#win-lose").text("You attacked " + this.currentDefender + " for " + this.currentPlayerAP + " damages. " + 
             this.currentDefender + " attacked you back for " + this.currentDefenderCAP + " damages.");
  
-           // Increase player AP 
+            // Increase player AP 
             this.currentPlayerAP += this.characters[this.currentPlayer]["AP"]; 
 
-            // If current player HP > 0 and Defender HP > 0 - still in play
-            
-            // If current play HP <= 0 and current defender HP > 0 - player loses
-            if ((this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) || 
-                ((this.currentPlayerHP <= 0 && this.currentDefenderHP <=0) && this.currentPlayerHP < this.currentDefenderHP)) {
+            // Player loses if player's HP is negative and defender's HP is positive.
+            if (this.currentPlayerHP <= 0 && this.currentDefenderHP > 0) {
                 
                 // Player lost
                 this.fightEnd(false);
 
             }
-            // If current defender HP <= 0 and current player HP > 0 
-            else if ((this.currentDefenderHP <= 0 && this.currentPlayerHP > 0) ||
-                    ((this.currentPlayerHP <= 0 && this.currentDefenderHP <=0) && this.currentPlayerHP >= this.currentDefenderHP)) {
+            // If defender's HP is negative and player's HP is positive
+            else if (this.currentDefenderHP <= 0 && this.currentPlayerHP > 0) {
 
                 this.enemiesLeft--;
                 
@@ -235,6 +250,19 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
                     
                 }
             }
+            // In the case both player's and defender's HPs fall negative at the same time, 
+            // the character with greater negative number wins. With both HPs negative, game is over regardless
+            else if (this.currentDefenderHP <= 0 && this.currentPlayerHP <= 0) {
+
+                // Player wins
+                if (this.currentPlayerHP >= this.currentDefenderHP) {
+                    this.fightEnd(true);
+                }
+                // Player loses
+                else {
+                    this.fightEnd(false);
+                }
+            }
             // Else (both player and defender HP are positive numbers), do nothing
             
         }
@@ -247,7 +275,7 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
      */
     reset: function() {
 
-        this.init();
+        this.init(playerWon);
 
         // Remove content in me, enemies, defender, win-lose section
         $("#me, #enemies, #defender, #win-lose").empty();
@@ -273,12 +301,10 @@ console.log("attack: player HP: " + this.currentPlayerHP + " defender HP: " + th
 // Button listeners
 $(document).ready(function() {
 
-    starWars.init();
+    starWars.init(playerWon);
 
     $("#player, #enemies").on("click", ".img-container .character", function() {
-
-        var key = $(this).val();
-        starWars.characterChosen(key);    
+        starWars.characterChosen($(this).val());    
     });
     
     $("#attack").on("click", function() {
