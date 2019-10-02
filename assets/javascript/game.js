@@ -264,7 +264,7 @@ var starWars = {
             if (hardReset) {
 
                 starWars.characters[item]["HP"] = getRandomNum(150, 250);
-                starWars.characters[item]["AP"] = getRandomNum(5, 15);
+                starWars.characters[item]["AP"] = getRandomNum(10, 20);
                 starWars.characters[item]["CAP"] = getRandomNum(15, 25);
             }
 
