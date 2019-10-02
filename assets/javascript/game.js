@@ -144,7 +144,7 @@ var starWars = {
                     }
                     // Put the other characters to the Enemy section and change the div background to red
                     else {
-                        starWars.populateImg("#enemies", item, "background-color:red");
+                        starWars.populateImg("#enemies", item, "background-color:red; color:white");
                     }
                 });
                                     
@@ -264,7 +264,7 @@ var starWars = {
 
                 starWars.characters[item]["HP"] = getRandomNum(150, 250);
                 starWars.characters[item]["AP"] = getRandomNum(5, 15);
-                starWars.characters[item]["CAP"] = getRandomNum(20, 30);
+                starWars.characters[item]["CAP"] = getRandomNum(15, 25);
             }
 
             // Place character images
