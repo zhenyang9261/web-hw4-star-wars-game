@@ -17,22 +17,22 @@ var starWars = {
     // Object to hold characters and their HP, AP, CAP
     characters: 
         {
-            "aaa": {
+            "Stormtrooper": {
                 HP: 0,
                 AP: 0,
                 CAP: 0
             },
-            "bbb": {
+            "Darth_Vader": {
                 HP: 0,
                 AP: 0,
                 CAP: 0
             },
-            "ccc": {
+            "Yoda": {
                 HP: 0,
                 AP: 0,
                 CAP: 0
             },
-            "ddd": {
+            "BB-8": {
                 HP: 0,
                 AP: 0,
                 CAP: 0
